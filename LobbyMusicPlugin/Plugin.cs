@@ -13,10 +13,9 @@ namespace LobbyMusicPlugin
         public override string Author { get; } = "Hanbin-GW";
         public override Version Version { get; } = new Version(0, 1, 0);
         public static Plugin Instance { get; private set; }
-        private string _audioDirectory;
+        private readonly string _audioDirectory;
         private bool _isMusicPlaying = false;
-        private string audioDirectory;
-        private AudioPlayerBase sharedAudioPlayer;
+        private AudioPlayerBase _sharedAudioPlayer;
 
 
         public Plugin()
@@ -32,7 +31,7 @@ namespace LobbyMusicPlugin
             //Exiled.Events.Handlers.Player.Verified += OnPlayerVerified;
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
             Exiled.Events.Handlers.Player.Left += OnPlayerLeft;
-            Log.SendRaw(audioDirectory,ConsoleColor.DarkGreen);
+            Log.SendRaw(_audioDirectory,ConsoleColor.DarkGreen);
             Log.SendRaw("[AudioPlugin] Custom Lobby Music Plugin Enabled",ConsoleColor.DarkGreen);
             Log.Info("-----------------------------------------");
             Log.Info("|  Thanks for using Hanbin-GW's Plugin  |");
@@ -48,7 +47,7 @@ namespace LobbyMusicPlugin
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
             Exiled.Events.Handlers.Player.Left -= OnPlayerLeft;
-            Log.SendRaw("[AudioPlugin] Path: " + audioDirectory,ConsoleColor.DarkGreen);
+            Log.SendRaw("[AudioPlugin] Path: " + _audioDirectory,ConsoleColor.DarkGreen);
             base.OnDisabled();
         }
 
@@ -77,14 +76,14 @@ namespace LobbyMusicPlugin
         private void PlayLobbyMusic()
         {
             
-            if (sharedAudioPlayer == null)
+            if (_sharedAudioPlayer == null)
             {
                 Log.Info("reset sharedAudioPlayer...");
                 // AudioPlayerBase 객체를 초기화
-                sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
 
                 // 초기화에 실패한 경우 오류 메시지 출력
-                if (sharedAudioPlayer == null)
+                if (_sharedAudioPlayer == null)
                 {
                     Log.Error("failed to reset sharedAudioPlayer. stop the music play...");
                     return;
@@ -100,29 +99,29 @@ namespace LobbyMusicPlugin
             if(Config.LoopSingleSong)
             {
                 //audioPlayer.CurrentPlay = Path.Combine(audioDirectory, Config.SingleSongPath); 
-                sharedAudioPlayer.CurrentPlay = Path.Combine(audioDirectory, Config.SingleSongPath); 
-                string songPath = Path.Combine(audioDirectory, Config.SingleSongPath); 
+                _sharedAudioPlayer.CurrentPlay = Path.Combine(_audioDirectory, Config.SingleSongPath); 
+                string songPath = Path.Combine(_audioDirectory, Config.SingleSongPath); 
                 //string songPath = Config.TempSingleSongPath;
                 if (!File.Exists(songPath)) 
                 { 
                     Log.Error($"Cannot find audio file: {songPath}"); 
                     return;
                 }
-                sharedAudioPlayer.Loop = true; 
-                sharedAudioPlayer.Play(-1);
+                _sharedAudioPlayer.Loop = true; 
+                _sharedAudioPlayer.Play(-1);
                 _isMusicPlaying = true;
-                Log.Info($"Music Path: {sharedAudioPlayer.CurrentPlay}"); 
+                Log.Info($"Music Path: {_sharedAudioPlayer.CurrentPlay}"); 
                 Map.Broadcast(5,$"playing...{Config.LoopSingleSong}");
             }
             else if (Config.LoopSingleSong == false) 
             {
                 foreach (string songPath in Config.QueueSongs) 
                 { 
-                    sharedAudioPlayer.Enqueue(songPath, 0);
+                    _sharedAudioPlayer.Enqueue(songPath, 0);
                 }
 
-                sharedAudioPlayer.Loop = false; 
-                sharedAudioPlayer.Play(0); 
+                _sharedAudioPlayer.Loop = false; 
+                _sharedAudioPlayer.Play(0); 
                 _isMusicPlaying = true;
                 BroadcastFileNameToPlayers(Config.QueueSongs[0]);
             }
@@ -137,12 +136,12 @@ namespace LobbyMusicPlugin
         
         private void StopLobbyMusic()
         {
-            if (sharedAudioPlayer != null && _isMusicPlaying == true)
+            if (_sharedAudioPlayer != null && _isMusicPlaying == true)
             {
                 //audioSource.Stop();
-                sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
-                sharedAudioPlayer.Loop = false;
-                sharedAudioPlayer.Stoptrack(true);
+                _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                _sharedAudioPlayer.Loop = false;
+                _sharedAudioPlayer.Stoptrack(true);
                 _isMusicPlaying = false;
                 Log.SendRaw("Stopping music...", ConsoleColor.Red);
             }
@@ -155,9 +154,9 @@ namespace LobbyMusicPlugin
 
         public void ListMusicFiles()
         {
-            if (Directory.Exists(audioDirectory))
+            if (Directory.Exists(_audioDirectory))
             {
-                string[] musicFiles = Directory.GetFiles(audioDirectory, "*.ogg");
+                string[] musicFiles = Directory.GetFiles(_audioDirectory, "*.ogg");
                 if (musicFiles.Length > 0)
                 {
                     Log.Info($"Music list (Total {musicFiles.Length}):");
@@ -174,7 +173,7 @@ namespace LobbyMusicPlugin
             }
             else
             {
-                Log.Error($"Cannot find a music folder: {audioDirectory}.");
+                Log.Error($"Cannot find a music folder: {_audioDirectory}.");
             }
         }
 
