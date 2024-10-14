@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using Exiled.API.Features;
+using Exiled.Events.EventArgs.Player;
 using SCPSLAudioApi;
+using SCPSLAudioApi.AudioCore;
 
 namespace LobbyMusicPlugin
 {
@@ -9,10 +11,13 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 0, 1);
+        public override Version Version { get; } = new Version(0, 1, 0);
         public static Plugin Instance { get; private set; }
         private string _audioDirectory;
-        private bool isMusicPlaying = false;
+        private bool _isMusicPlaying = false;
+        private string audioDirectory;
+        private AudioPlayerBase sharedAudioPlayer;
+
 
         public Plugin()
         {
@@ -22,14 +27,171 @@ namespace LobbyMusicPlugin
 
         public override void OnEnabled()
         {
-            Log.Info("Thanks for using Hanbin-GW's Plugin.");
             //Log.Info("You can donate the Ghost server and get a extended version!");
+            Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
+            //Exiled.Events.Handlers.Player.Verified += OnPlayerVerified;
+            Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
+            Exiled.Events.Handlers.Player.Left += OnPlayerLeft;
+            Log.SendRaw(audioDirectory,ConsoleColor.DarkGreen);
+            Log.SendRaw("[AudioPlugin] Custom Lobby Music Plugin Enabled",ConsoleColor.DarkGreen);
+            Log.Info("-----------------------------------------");
+            Log.Info("|  Thanks for using Hanbin-GW's Plugin  |");
+            Log.Info("-----------------------------------------");
+
             base.OnEnabled();
         }
 
         public override void OnDisabled()
         {
+            Log.Info("Thanks for using Hanbin-GW's Plugin.");
+            //Log.Info("You can donate the Ghost server and get a extended version!");
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
+            Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
+            Exiled.Events.Handlers.Player.Left -= OnPlayerLeft;
+            Log.SendRaw("[AudioPlugin] Path: " + audioDirectory,ConsoleColor.DarkGreen);
             base.OnDisabled();
+        }
+
+        private void OnRoundStarted()
+        {
+            StopLobbyMusic();
+        }
+
+        private void OnPlayerLeft(LeftEventArgs ev)
+        {
+            if (Server.PlayerCount == 0)
+            {
+                StopLobbyMusic();
+            }
+        }
+
+
+        // 대기 로비 상태에서 호출되는 이벤트 핸들러
+        private void OnWaitingForPlayers()
+        {
+            EnsureMusicDirectoryExists();
+            PlayLobbyMusic();
+        }
+
+        
+        private void PlayLobbyMusic()
+        {
+            
+            if (sharedAudioPlayer == null)
+            {
+                Log.Info("reset sharedAudioPlayer...");
+                // AudioPlayerBase 객체를 초기화
+                sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+
+                // 초기화에 실패한 경우 오류 메시지 출력
+                if (sharedAudioPlayer == null)
+                {
+                    Log.Error("failed to reset sharedAudioPlayer. stop the music play...");
+                    return;
+                }
+            }
+
+            if (_isMusicPlaying)
+            { 
+                Log.Info("The music is already playing..."); 
+                return;
+            }
+            
+            if(Config.LoopSingleSong)
+            {
+                //audioPlayer.CurrentPlay = Path.Combine(audioDirectory, Config.SingleSongPath); 
+                sharedAudioPlayer.CurrentPlay = Path.Combine(audioDirectory, Config.SingleSongPath); 
+                string songPath = Path.Combine(audioDirectory, Config.SingleSongPath); 
+                //string songPath = Config.TempSingleSongPath;
+                if (!File.Exists(songPath)) 
+                { 
+                    Log.Error($"Cannot find audio file: {songPath}"); 
+                    return;
+                }
+                sharedAudioPlayer.Loop = true; 
+                sharedAudioPlayer.Play(-1);
+                _isMusicPlaying = true;
+                Log.Info($"Music Path: {sharedAudioPlayer.CurrentPlay}"); 
+                Map.Broadcast(5,$"playing...{Config.LoopSingleSong}");
+            }
+            else if (Config.LoopSingleSong == false) 
+            {
+                foreach (string songPath in Config.QueueSongs) 
+                { 
+                    sharedAudioPlayer.Enqueue(songPath, 0);
+                }
+
+                sharedAudioPlayer.Loop = false; 
+                sharedAudioPlayer.Play(0); 
+                _isMusicPlaying = true;
+                BroadcastFileNameToPlayers(Config.QueueSongs[0]);
+            }
+        
+        }
+        
+        private void BroadcastFileNameToPlayers(string filePath)
+        {
+            string fileName = Path.GetFileName(filePath);
+            Map.Broadcast(5, $"<size=30><color=aqua>Now Playing: {fileName}</color></size>");
+        }
+        
+        private void StopLobbyMusic()
+        {
+            if (sharedAudioPlayer != null && _isMusicPlaying == true)
+            {
+                //audioSource.Stop();
+                sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                sharedAudioPlayer.Loop = false;
+                sharedAudioPlayer.Stoptrack(true);
+                _isMusicPlaying = false;
+                Log.SendRaw("Stopping music...", ConsoleColor.Red);
+            }
+            else
+            {
+                Log.Error("The music is not playing..");
+            }
+
+        }
+
+        public void ListMusicFiles()
+        {
+            if (Directory.Exists(audioDirectory))
+            {
+                string[] musicFiles = Directory.GetFiles(audioDirectory, "*.ogg");
+                if (musicFiles.Length > 0)
+                {
+                    Log.Info($"Music list (Total {musicFiles.Length}):");
+                    foreach (string file in musicFiles)
+                    {
+                        string fileName = Path.GetFileName(file);
+                        Log.Info(fileName);
+                    }
+                }
+                else
+                {
+                    Log.Warn("The file is not exists in the folder!");
+                }
+            }
+            else
+            {
+                Log.Error($"Cannot find a music folder: {audioDirectory}.");
+            }
+        }
+
+        private void EnsureMusicDirectoryExists()
+        {
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EXILED",
+                "Plugins", "audio");
+
+            if (!Directory.Exists(path))
+            {
+                Log.Warn($"Music folder doesn't exists. create a new: {path}.");
+                Directory.CreateDirectory(path);
+            }
+            else
+            {
+                Log.Info("The music folder is already exists.");
+            }
         }
     }
 }
