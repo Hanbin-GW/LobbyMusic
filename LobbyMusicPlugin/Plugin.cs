@@ -22,6 +22,8 @@ namespace LobbyMusicPlugin
 
         public override void OnEnabled()
         {
+            Log.Info("Thanks for using Hanbin-GW's Plugin.");
+            //Log.Info("You can donate the Ghost server and get a extended version!");
             base.OnEnabled();
         }
 
