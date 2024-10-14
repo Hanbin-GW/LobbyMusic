@@ -99,8 +99,8 @@ namespace LobbyMusicPlugin
             if(Config.LoopSingleSong)
             {
                 //audioPlayer.CurrentPlay = Path.Combine(audioDirectory, Config.SingleSongPath); 
-                _sharedAudioPlayer.CurrentPlay = Path.Combine(_audioDirectory, Config.SingleSongPath); 
-                string songPath = Path.Combine(_audioDirectory, Config.SingleSongPath); 
+                _sharedAudioPlayer.CurrentPlay = Path.Combine(_audioDirectory, Config.SingleSongName); 
+                string songPath = Path.Combine(_audioDirectory, Config.SingleSongName); 
                 //string songPath = Config.TempSingleSongPath;
                 if (!File.Exists(songPath)) 
                 { 
