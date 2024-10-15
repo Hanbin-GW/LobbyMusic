@@ -70,6 +70,7 @@ crashlytics-build.properties
 /packages
 /LobbyMusicPlugin/obj/Debug/
 /LobbyMusicPlugin/obj/Release/
+/LobbyMusicPlugin/bin/Debug/
 /LobbyMusicPlugin/bin/Release
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
