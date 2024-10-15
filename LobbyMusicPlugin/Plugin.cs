@@ -11,11 +11,11 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 1, 1);
+        public override Version Version { get; } = new Version(0, 2, 0);
         public static Plugin Instance { get; private set; }
         private readonly string _audioDirectory;
         private bool _isMusicPlaying = false;
-        private AudioPlayerBase _sharedAudioPlayer;
+        public AudioPlayerBase _sharedAudioPlayer;
 
 
         public Plugin()
@@ -134,7 +134,7 @@ namespace LobbyMusicPlugin
             Map.Broadcast(5, $"<size=30><color=aqua>Now Playing: {fileName}</color></size>");
         }
         
-        private void StopLobbyMusic()
+        public void StopLobbyMusic()
         {
             if (_sharedAudioPlayer != null && _isMusicPlaying == true)
             {
