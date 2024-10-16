@@ -9,8 +9,7 @@ namespace LobbyMusicPlugin.Commands
 	{
 		public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
 		{
-			Plugin.Instance.ListMusicFiles();
-			response = "Successfully music list has been printed!";
+			response = $"Successfully music list has been printed!\n{Plugin.Instance.ListMusicFiles()}";
 			return true;
 		}
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs.Player;
@@ -31,23 +32,22 @@ namespace LobbyMusicPlugin
             //Exiled.Events.Handlers.Player.Verified += OnPlayerVerified;
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
             Exiled.Events.Handlers.Player.Left += OnPlayerLeft;
-            Log.SendRaw(_audioDirectory,ConsoleColor.DarkGreen);
+            Log.SendRaw("[AudioPlugin] Path: " + _audioDirectory,ConsoleColor.DarkGreen);
             Log.SendRaw("[AudioPlugin] Custom Lobby Music Plugin Enabled",ConsoleColor.DarkGreen);
             Log.Info("-----------------------------------------");
             Log.Info("|  Thanks for using Hanbin-GW's Plugin  |");
             Log.Info("-----------------------------------------");
-
+            //Log.Info("You can donate the Ghost server and get a extended version!");
             base.OnEnabled();
         }
 
         public override void OnDisabled()
         {
-            Log.Info("Thanks for using Hanbin-GW's Plugin.");
-            //Log.Info("You can donate the Ghost server and get a extended version!");
+            //Log.Info("Thanks for using Hanbin-GW's Plugin.");
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
             Exiled.Events.Handlers.Player.Left -= OnPlayerLeft;
-            Log.SendRaw("[AudioPlugin] Path: " + _audioDirectory,ConsoleColor.DarkGreen);
+            //Log.SendRaw("[AudioPlugin] Path: " + _audioDirectory,ConsoleColor.DarkGreen);
             base.OnDisabled();
         }
 
@@ -152,29 +152,34 @@ namespace LobbyMusicPlugin
 
         }
 
-        public void ListMusicFiles()
+        public string ListMusicFiles()
         {
+            List<string> stringBuilder = new List<string>();
             if (Directory.Exists(_audioDirectory))
             {
-                string[] musicFiles = Directory.GetFiles(_audioDirectory, "*.ogg");
+                string[] musicFiles = Directory.GetFiles(_audioDirectory, "*.ogg");  // .ogg 파일만 가져옴
                 if (musicFiles.Length > 0)
                 {
-                    Log.Info($"Music list (Total {musicFiles.Length}):");
+
+                    Log.Info($"음악 파일 목록 (총 {musicFiles.Length}개):");
                     foreach (string file in musicFiles)
                     {
                         string fileName = Path.GetFileName(file);
-                        Log.Info(fileName);
+                        stringBuilder.Add(fileName);
                     }
                 }
                 else
                 {
-                    Log.Warn("The file is not exists in the folder!");
+                    Log.Warn("음악 폴더에 파일이 없습니다.");
                 }
             }
             else
             {
-                Log.Error($"Cannot find a music folder: {_audioDirectory}.");
+                Log.Error($"음악 폴더를 찾을 수 없습니다: {_audioDirectory}.");
+                EnsureMusicDirectoryExists();
             }
+            string finalFileList = string.Join("\n", stringBuilder);
+            return finalFileList;
         }
 
         private void EnsureMusicDirectoryExists()

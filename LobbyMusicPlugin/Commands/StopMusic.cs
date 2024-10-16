@@ -9,13 +9,13 @@ namespace LobbyMusicPlugin.Commands
         {
             if (Plugin.Instance == null || Plugin.Instance._sharedAudioPlayer == null)
             {
-                response = "현재 재생 중인 음악이 없습니다.";
+                response = "there has a no music playing now";
                 return false;
             }
 
             // 음악을 중지하는 로직 호출
             Plugin.Instance.StopLobbyMusic();
-            response = "음악이 중지되었습니다.";
+            response = "The Music has been stopped";
             return true;
         }
 
