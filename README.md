@@ -1,4 +1,4 @@
-# LobbyMusic
+# LobbyMusic (Free Version)
 The lobby music plugin
 
 **MUST** required CedMod's ****SCPSLAudioApi**** Plugin 
