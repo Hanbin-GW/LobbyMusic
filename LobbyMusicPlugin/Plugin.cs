@@ -12,7 +12,7 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 2, 1);
+        public override Version Version { get; } = new Version(0, 3, 0);
         public static Plugin Instance { get; private set; }
         private readonly string _audioDirectory;
         private bool _isMusicPlaying = false;
@@ -143,7 +143,7 @@ namespace LobbyMusicPlugin
                 _sharedAudioPlayer.Loop = false;
                 _sharedAudioPlayer.Stoptrack(true);
                 _isMusicPlaying = false;
-                Log.SendRaw("Stopping music...", ConsoleColor.Red);
+                Log.SendRaw("Stopping music...", ConsoleColor.DarkRed);
             }
             else
             {
@@ -160,8 +160,6 @@ namespace LobbyMusicPlugin
                 string[] musicFiles = Directory.GetFiles(_audioDirectory, "*.ogg");  // .ogg 파일만 가져옴
                 if (musicFiles.Length > 0)
                 {
-
-                    Log.Info($"음악 파일 목록 (총 {musicFiles.Length}개):");
                     foreach (string file in musicFiles)
                     {
                         string fileName = Path.GetFileName(file);
@@ -170,16 +168,65 @@ namespace LobbyMusicPlugin
                 }
                 else
                 {
-                    Log.Warn("음악 폴더에 파일이 없습니다.");
+                    Log.Warn("There has no music file in folder!");
                 }
             }
             else
             {
-                Log.Error($"음악 폴더를 찾을 수 없습니다: {_audioDirectory}.");
+                Log.Error($"Cannot find the music path: {_audioDirectory}.");
                 EnsureMusicDirectoryExists();
             }
             string finalFileList = string.Join("\n", stringBuilder);
             return finalFileList;
+        }
+        
+        public void PlaySpecificMusic(string filepath)
+        {
+            if (_sharedAudioPlayer == null)
+            {
+                _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                if (_sharedAudioPlayer == null)
+                {
+                    Log.Error("Failed to reset sharedAudioPlayer. You cannot play music.");
+                    return;
+                }
+            }
+
+            if (!File.Exists(filepath))
+            {
+                Log.Error($"Cannot find audio path: {filepath}");
+                return;
+            }
+            
+            StopLobbyMusic();
+            
+            _sharedAudioPlayer.CurrentPlay = filepath;
+            _sharedAudioPlayer.Loop = false;  // 특정 곡은 반복하지 않음
+            _sharedAudioPlayer.Play(-1);
+            
+            Log.Info($"Specific music is playing: {filepath}");
+        }
+
+        public void SetMusicVolume(float volume)
+        {
+            if (_sharedAudioPlayer == null)
+            {
+                _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                if (_sharedAudioPlayer == null)
+                {
+                    Log.Error("Failed to reset sharedAudioPlayer. You cannot play music.");
+                    return;
+                }
+            }
+            if (_sharedAudioPlayer != null)
+            {
+                _sharedAudioPlayer.Volume = volume;  // 볼륨 설정 (0.0 ~ 1.0)
+                Log.Info($"The volume set {volume * 100}%");
+            }
+            else
+            {
+                Log.Warn("The music is not playing... You cannot set volume");
+            }
         }
 
         private void EnsureMusicDirectoryExists()
