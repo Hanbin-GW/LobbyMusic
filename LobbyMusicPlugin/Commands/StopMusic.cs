@@ -3,6 +3,7 @@ using CommandSystem;
 
 namespace LobbyMusicPlugin.Commands
 {
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class StopMusic : ICommand
     {
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)

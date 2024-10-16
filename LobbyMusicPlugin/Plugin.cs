@@ -202,6 +202,7 @@ namespace LobbyMusicPlugin
             
             _sharedAudioPlayer.CurrentPlay = filepath;
             _sharedAudioPlayer.Loop = false;  // 특정 곡은 반복하지 않음
+            _isMusicPlaying = true;
             _sharedAudioPlayer.Play(-1);
             
             Log.Info($"Specific music is playing: {filepath}");
