@@ -12,7 +12,7 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 3, 0);
+        public override Version Version { get; } = new Version(0, 3, 1);
         public static Plugin Instance { get; private set; }
         private readonly string _audioDirectory;
         private bool _isMusicPlaying = false;
@@ -29,6 +29,7 @@ namespace LobbyMusicPlugin
         {
             //Log.Info("You can donate the Ghost server and get a extended version!");
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
+            Exiled.Events.Handlers.Server.RestartingRound += OnRestartingRound;
             //Exiled.Events.Handlers.Player.Verified += OnPlayerVerified;
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
             Exiled.Events.Handlers.Player.Left += OnPlayerLeft;
@@ -42,12 +43,11 @@ namespace LobbyMusicPlugin
         }
 
         public override void OnDisabled()
-        {
-            //Log.Info("Thanks for using Hanbin-GW's Plugin.");
+        { 
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
+            Exiled.Events.Handlers.Server.RestartingRound -= OnRestartingRound;
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
             Exiled.Events.Handlers.Player.Left -= OnPlayerLeft;
-            //Log.SendRaw("[AudioPlugin] Path: " + _audioDirectory,ConsoleColor.DarkGreen);
             base.OnDisabled();
         }
 
@@ -70,6 +70,11 @@ namespace LobbyMusicPlugin
         {
             EnsureMusicDirectoryExists();
             PlayLobbyMusic();
+        }
+
+        private void OnRestartingRound()
+        {
+            _isMusicPlaying = false;
         }
 
         
