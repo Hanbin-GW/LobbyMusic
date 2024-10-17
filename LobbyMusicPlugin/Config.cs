@@ -13,6 +13,8 @@ namespace LobbyMusicPlugin
         public string SingleSongName { get; set; } = "77.ogg";
         [Description("If the song is not loop, the song will be play in this list")]
         public string[] QueueSongs { get; set; } = { "Example1.ogg", "Example2.ogg" };
+        
+        public float StandardVolume { get; set; } = 70f;
 
     }
 }

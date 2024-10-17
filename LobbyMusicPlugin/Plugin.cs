@@ -108,6 +108,7 @@ namespace LobbyMusicPlugin
                     return;
                 }
                 _sharedAudioPlayer.Loop = true; 
+                _sharedAudioPlayer.Volume = Config.StandardVolume;
                 _sharedAudioPlayer.Play(-1);
                 _isMusicPlaying = true;
                 Log.Info($"Music Path: {_sharedAudioPlayer.CurrentPlay}"); 
@@ -121,6 +122,7 @@ namespace LobbyMusicPlugin
                 }
 
                 _sharedAudioPlayer.Loop = false; 
+                _sharedAudioPlayer.Volume = Config.StandardVolume;
                 _sharedAudioPlayer.Play(0); 
                 _isMusicPlaying = true;
                 BroadcastFileNameToPlayers(Config.QueueSongs[0]);
@@ -141,6 +143,7 @@ namespace LobbyMusicPlugin
                 //audioSource.Stop();
                 _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
                 _sharedAudioPlayer.Loop = false;
+                _sharedAudioPlayer.Volume = Config.StandardVolume;
                 _sharedAudioPlayer.Stoptrack(true);
                 _isMusicPlaying = false;
                 Log.SendRaw("Stopping music...", ConsoleColor.DarkRed);
@@ -203,6 +206,7 @@ namespace LobbyMusicPlugin
             _sharedAudioPlayer.CurrentPlay = filepath;
             _sharedAudioPlayer.Loop = false;  // 특정 곡은 반복하지 않음
             _isMusicPlaying = true;
+            _sharedAudioPlayer.Volume = Config.StandardVolume;
             _sharedAudioPlayer.Play(-1);
             
             Log.Info($"Specific music is playing: {filepath}");
