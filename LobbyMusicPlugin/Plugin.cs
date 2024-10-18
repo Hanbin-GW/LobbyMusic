@@ -16,7 +16,7 @@ namespace LobbyMusicPlugin
         public static Plugin Instance { get; private set; }
         private readonly string _audioDirectory;
         private bool _isMusicPlaying = false;
-        public AudioPlayerBase _sharedAudioPlayer;
+        public AudioPlayerBase SharedAudioPlayer;
 
 
         public Plugin()
@@ -80,15 +80,14 @@ namespace LobbyMusicPlugin
         
         private void PlayLobbyMusic()
         {
-            
-            if (_sharedAudioPlayer == null)
+            if (SharedAudioPlayer == null)
             {
                 Log.Info("reset sharedAudioPlayer...");
                 // AudioPlayerBase 객체를 초기화
-                _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                SharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
 
                 // 초기화에 실패한 경우 오류 메시지 출력
-                if (_sharedAudioPlayer == null)
+                if (SharedAudioPlayer == null)
                 {
                     Log.Error("failed to reset sharedAudioPlayer. stop the music play...");
                     return;
@@ -104,7 +103,7 @@ namespace LobbyMusicPlugin
             if(Config.LoopSingleSong)
             {
                 //audioPlayer.CurrentPlay = Path.Combine(audioDirectory, Config.SingleSongPath); 
-                _sharedAudioPlayer.CurrentPlay = Path.Combine(_audioDirectory, Config.SingleSongName); 
+                SharedAudioPlayer.CurrentPlay = Path.Combine(_audioDirectory, Config.SingleSongName); 
                 string songPath = Path.Combine(_audioDirectory, Config.SingleSongName); 
                 //string songPath = Config.TempSingleSongPath;
                 if (!File.Exists(songPath)) 
@@ -112,11 +111,11 @@ namespace LobbyMusicPlugin
                     Log.Error($"Cannot find audio file: {songPath}"); 
                     return;
                 }
-                _sharedAudioPlayer.Loop = true; 
-                _sharedAudioPlayer.Volume = Config.StandardVolume;
-                _sharedAudioPlayer.Play(-1);
+                SharedAudioPlayer.Loop = true; 
+                SharedAudioPlayer.Volume = Config.StandardVolume;
+                SharedAudioPlayer.Play(-1);
                 _isMusicPlaying = true;
-                Log.Info($"Music Path: {_sharedAudioPlayer.CurrentPlay}"); 
+                Log.Info($"Music Path: {SharedAudioPlayer.CurrentPlay}"); 
                 Map.Broadcast(5,$"playing...{Config.LoopSingleSong}");
             }
             else if (Config.LoopSingleSong == false) 
@@ -129,12 +128,12 @@ namespace LobbyMusicPlugin
                         Log.Error($"Cannot find audio file: {songPath}");
                         continue;
                     }
-                    _sharedAudioPlayer.Enqueue(songPath, 0);
+                    SharedAudioPlayer.Enqueue(songPath, 0);
                 }
 
-                _sharedAudioPlayer.Loop = false; 
-                _sharedAudioPlayer.Volume = Config.StandardVolume;
-                _sharedAudioPlayer.Play(0); 
+                SharedAudioPlayer.Loop = false; 
+                SharedAudioPlayer.Volume = Config.StandardVolume;
+                SharedAudioPlayer.Play(0); 
                 _isMusicPlaying = true;
                 BroadcastFileNameToPlayers(Config.QueueSongs[0]);
             }
@@ -149,13 +148,13 @@ namespace LobbyMusicPlugin
         
         public void StopLobbyMusic()
         {
-            if (_sharedAudioPlayer != null && _isMusicPlaying == true)
+            if (SharedAudioPlayer != null && _isMusicPlaying == true)
             {
                 //audioSource.Stop();
-                _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
-                _sharedAudioPlayer.Loop = false;
-                _sharedAudioPlayer.Volume = Config.StandardVolume;
-                _sharedAudioPlayer.Stoptrack(true);
+                SharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                SharedAudioPlayer.Loop = false;
+                SharedAudioPlayer.Volume = Config.StandardVolume;
+                SharedAudioPlayer.Stoptrack(true);
                 _isMusicPlaying = false;
                 Log.SendRaw("Stopping music...", ConsoleColor.DarkRed);
             }
@@ -196,10 +195,10 @@ namespace LobbyMusicPlugin
         
         public void PlaySpecificMusic(string filepath)
         {
-            if (_sharedAudioPlayer == null)
+            if (SharedAudioPlayer == null)
             {
-                _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
-                if (_sharedAudioPlayer == null)
+                SharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                if (SharedAudioPlayer == null)
                 {
                     Log.Error("Failed to reset sharedAudioPlayer. You cannot play music.");
                     return;
@@ -214,29 +213,29 @@ namespace LobbyMusicPlugin
             
             StopLobbyMusic();
             
-            _sharedAudioPlayer.CurrentPlay = filepath;
-            _sharedAudioPlayer.Loop = false;  // 특정 곡은 반복하지 않음
+            SharedAudioPlayer.CurrentPlay = filepath;
+            SharedAudioPlayer.Loop = false;  // 특정 곡은 반복하지 않음
             _isMusicPlaying = true;
-            _sharedAudioPlayer.Volume = Config.StandardVolume;
-            _sharedAudioPlayer.Play(-1);
+            SharedAudioPlayer.Volume = Config.StandardVolume;
+            SharedAudioPlayer.Play(-1);
             
             Log.Info($"Specific music is playing: {filepath}");
         }
 
         public void SetMusicVolume(float volume)
         {
-            if (_sharedAudioPlayer == null)
+            if (SharedAudioPlayer == null)
             {
-                _sharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
-                if (_sharedAudioPlayer == null)
+                SharedAudioPlayer = AudioPlayerBase.Get(Server.Host.ReferenceHub);
+                if (SharedAudioPlayer == null)
                 {
                     Log.Error("Failed to reset sharedAudioPlayer. You cannot play music.");
                     return;
                 }
             }
-            if (_sharedAudioPlayer != null)
+            if (SharedAudioPlayer != null)
             {
-                _sharedAudioPlayer.Volume = volume;  // 볼륨 설정 (0.0 ~ 1.0)
+                SharedAudioPlayer.Volume = volume;  // 볼륨 설정 (0.0 ~ 1.0)
                 Log.Info($"The volume set {volume * 100}%");
             }
             else

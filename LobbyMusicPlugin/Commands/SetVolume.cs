@@ -21,7 +21,7 @@ namespace LobbyMusicPlugin.Commands
                 return false;
             }
 
-            if (Plugin.Instance == null || Plugin.Instance._sharedAudioPlayer == null)
+            if (Plugin.Instance == null || Plugin.Instance.SharedAudioPlayer == null)
             {
                 response = "there has no playing music now.";
                 return false;

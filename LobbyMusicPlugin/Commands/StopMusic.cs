@@ -8,7 +8,7 @@ namespace LobbyMusicPlugin.Commands
     {
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (Plugin.Instance == null || Plugin.Instance._sharedAudioPlayer == null)
+            if (Plugin.Instance == null || Plugin.Instance.SharedAudioPlayer == null)
             {
                 response = "there has a no music playing now";
                 return false;
