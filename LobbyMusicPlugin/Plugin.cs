@@ -12,7 +12,7 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 3, 2);
+        public override Version Version { get; } = new Version(0, 3, 3);
         public static Plugin Instance { get; private set; }
         private readonly string _audioDirectory;
         private bool _isMusicPlaying = false;
@@ -121,8 +121,14 @@ namespace LobbyMusicPlugin
             }
             else if (Config.LoopSingleSong == false) 
             {
-                foreach (string songPath in Config.QueueSongs) 
-                { 
+                foreach (string song in Config.QueueSongs)
+                {
+                    string songPath = Path.Combine(_audioDirectory, song);
+                    if (!File.Exists(songPath))
+                    {
+                        Log.Error($"Cannot find audio file: {songPath}");
+                        continue;
+                    }
                     _sharedAudioPlayer.Enqueue(songPath, 0);
                 }
 
