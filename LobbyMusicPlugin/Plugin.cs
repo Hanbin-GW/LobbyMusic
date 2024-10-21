@@ -12,10 +12,10 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 3, 3);
+        public override Version Version { get; } = new Version(0, 4, 0);
         public static Plugin Instance { get; private set; }
         private readonly string _audioDirectory;
-        private bool _isMusicPlaying = false;
+        private bool _isMusicPlaying;
         public AudioPlayerBase SharedAudioPlayer;
 
 
