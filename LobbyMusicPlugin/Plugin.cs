@@ -5,10 +5,6 @@ using Exiled.API.Enums;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Server;
 using System.IO;
-using Exiled.Events.EventArgs.Map;
-using Exiled.Events.EventArgs.Warhead;
-using Respawning;
-using MEC;
 using SCPSLAudioApi.AudioCore;
 
 namespace LobbyMusicPlugin
@@ -17,7 +13,7 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 4, 4);
+        public override Version Version { get; } = new Version(0, 4, 5);
         public AudioPlayerBase SharedAudioPlayer;
         public override PluginPriority Priority => PluginPriority.Default;
         public static Plugin Instance { get; private set; }
@@ -37,6 +33,7 @@ namespace LobbyMusicPlugin
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
             Exiled.Events.Handlers.Server.RoundEnded += OnRoundEnded;
             Exiled.Events.Handlers.Player.Left += OnPlayerLeft;
+            Exiled.Events.Handlers.Player.Verified += OnPlayerVerified;
             Log.SendRaw(_audioDirectory,ConsoleColor.Green);
             Log.SendRaw("[AudioPlugin] Custom Music Plugin Active",ConsoleColor.DarkYellow);
             base.OnEnabled();
@@ -48,12 +45,19 @@ namespace LobbyMusicPlugin
             Exiled.Events.Handlers.Server.RoundStarted -= OnRoundStarted;
             Exiled.Events.Handlers.Server.RoundEnded -= OnRoundEnded;
             Exiled.Events.Handlers.Player.Left -= OnPlayerLeft;
+            Exiled.Events.Handlers.Player.Verified -= OnPlayerVerified;
             Instance = null;
             Log.SendRaw("[AudioPlugin] Custom Lobby Music Plugin Disabled", ConsoleColor.DarkYellow);
             base.OnDisabled();
         }
         
-        
+        private void OnPlayerVerified(VerifiedEventArgs ev)
+        {
+            if (!_isMusicPlaying && Server.PlayerCount > 0)
+            {
+                PlayLobbyMusic();
+            }
+        }
 
         private void OnRoundStarted()
         {
@@ -77,6 +81,10 @@ namespace LobbyMusicPlugin
         {
             EnsureMusicDirectoryExists();
             PlayLobbyMusic();
+            if (Server.PlayerCount == 0)
+            {
+                StopLobbyMusic();
+            }
         }
 
         private void PlayLobbyMusic()
