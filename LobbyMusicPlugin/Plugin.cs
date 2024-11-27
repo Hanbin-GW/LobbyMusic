@@ -13,7 +13,7 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 4, 5);
+        public override Version Version { get; } = new Version(0, 5, 0);
         public AudioPlayerBase SharedAudioPlayer;
         public override PluginPriority Priority => PluginPriority.Default;
         public static Plugin Instance { get; private set; }
