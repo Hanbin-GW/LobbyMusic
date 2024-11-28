@@ -13,7 +13,7 @@ The lobby music plugin
 - if you enable LoopSingleSong, the one of sone is infinitelly played you can set in `SingleSongName`
 - if you not enable the `SingleSongName`, you have to set queue the song lists. (`QueueSongs`)
 - <span style = "color:red"> the music file must be mono and audio must be 48000 Hz</span>
-- You can convert the .mp3 file to .ogg + mono + 480000Hz <a href="https://github.com/Hanbin-GW/Music-.ogg-mono-Converter/releases">Download</a>
+- You can convert the .mp3 file to .ogg + mono + 480000Hz <a href="https://github.com/Hanbin-GW/Music-.ogg-mono-Converter/releases">Download( + need ffmp)</a>
 ## Tech Support
 ### <a href = "https://discord.gg/aYyNucAfqE">Made by Ghost Server</a>
 
