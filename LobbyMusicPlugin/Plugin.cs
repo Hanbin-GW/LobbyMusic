@@ -53,9 +53,29 @@ namespace LobbyMusicPlugin
         
         private void OnPlayerVerified(VerifiedEventArgs ev)
         {
-            if (!_isMusicPlaying && Server.PlayerCount > 0)
+            if (Config.IsPlayMusicNoPerson)
             {
-                PlayLobbyMusic();
+                if (Round.IsStarted)
+                {
+                    return;
+                }
+
+                if (_isMusicPlaying && !Round.IsStarted)
+                {
+                    PlayLobbyMusic();
+                }
+            }
+            
+            if (Config.IsPlayMusicNoPerson == false)
+            {
+                if (Round.IsStarted)
+                {
+                    return;
+                }
+                if (!_isMusicPlaying && Server.PlayerCount >= 1 && !Round.IsStarted)
+                {
+                    PlayLobbyMusic();
+                }
             }
         }
 

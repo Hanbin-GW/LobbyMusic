@@ -16,5 +16,7 @@ namespace LobbyMusicPlugin
         [Description("You can set a standard volume when music is playing.")]
         public float StandardVolume { get; set; } = 70f;
 
+        [Description("Play music without player?")]
+        public bool IsPlayMusicNoPerson { get; set; } = false;
     }
 }
