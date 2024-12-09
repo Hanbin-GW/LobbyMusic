@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using AdminToys;
-using Exiled.API.Enums;
 using Exiled.API.Features;
-using Exiled.API.Features.Toys;
-using Exiled.Events.EventArgs;
-using UnityEngine;
-using UnityEngine.Playables;
-using Log = Exiled.API.Features.Log;
+using VoiceChat.Codec;
+using VoiceChat.Codec.Enums;
 
 namespace LobbyMusicPlugin
 {
@@ -16,8 +11,17 @@ namespace LobbyMusicPlugin
     {
         public override string Name => "LobbyMusic";
         public override string Author => "YourName";
-        public override Version Version { get; } = new Version(0, 5, 0);
-        private readonly string _audioDirectory;
+        public override Version Version { get; } = new Version(1, 0, 0);
+        
+        private void OnWaitingForPlayers()
+        {
+            SpeakerManager.Instance.EnsureMusicDirectoryExists();
+            //PlayLobbyMusic();
+            if (Server.PlayerCount == 0)
+            {
+                SpeakerManager.Instance.PlayMusicToPlayer("77.ogg");
+            }
+        }
         public override void OnEnabled()
         {
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
@@ -28,13 +32,6 @@ namespace LobbyMusicPlugin
         {
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
             base.OnDisabled();
-        }
-
-        private void OnWaitingForPlayers()
-        {
-            SpeakerToy speakerToy = new SpeakerToy();
-            //speakerToy.Playback(_audioDirectory);
-            speakerToy.Volume = 50f;
         }
     }
 }
