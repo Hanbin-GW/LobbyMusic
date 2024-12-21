@@ -55,23 +55,17 @@ namespace LobbyMusicPlugin
             Vector3 rotation = new Vector3(0, 90, 0);
             Vector3 scale = new Vector3(1, 1, 1);
             string songPath = Path.Combine(_audioDirectory, Config.Path); 
-
             _speaker = Speaker.Create(position, rotation, scale, spawn: true);
             _speaker.IsSpatial = false;
-            byte[] opusData = File.ReadAllBytes(songPath);
-            AudioMessage msg = new AudioMessage
-            {
-                Data = opusData,
-                DataLength = opusData.Length,
-            };
-            _speaker.Base.Playback.DecodeSamples(msg);
-            Log.Info($"playing... {msg}");
+            _speaker.Base.Playback.Source.clip = Resources.Load<AudioClip>(songPath);
+            _speaker.Base.Playback.Source.Play();
         }
 
         private void OnRoundStarted()
         {
             if (_speaker != null)
             {
+                _speaker.Base.Playback.Source.Stop();
                 _speaker.Destroy();
             }
             RoleTypeId npcRole = RoleTypeId.Scp049;
