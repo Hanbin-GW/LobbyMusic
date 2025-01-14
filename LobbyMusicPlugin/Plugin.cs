@@ -13,7 +13,7 @@ namespace LobbyMusicPlugin
     {
         public override string Name { get; } = "LobbyMusicPlugin";
         public override string Author { get; } = "Hanbin-GW";
-        public override Version Version { get; } = new Version(0, 5, 3);
+        public override Version Version { get; } = new Version(0, 5, 4);
         public AudioPlayerBase SharedAudioPlayer;
         public override PluginPriority Priority => PluginPriority.Default;
         public static Plugin Instance { get; private set; }
@@ -145,7 +145,7 @@ namespace LobbyMusicPlugin
                 SharedAudioPlayer.Play(-1);
                 _isMusicPlaying = true;
                 Log.Info($"Music Path: {SharedAudioPlayer.CurrentPlay}"); 
-                Map.Broadcast(5,$"playing...{Config.LoopSingleSong}");
+                Map.Broadcast(5,$"playing...{SharedAudioPlayer.CurrentPlay}");
             }
             else if (Config.LoopSingleSong == false) 
             {
