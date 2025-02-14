@@ -19,6 +19,7 @@ namespace LobbyMusicPlugin
         public static Plugin Instance { get; private set; }
         private readonly string _audioDirectory;
         private bool _isMusicPlaying = false;
+        public override Version RequiredExiledVersion { get; } = new Version(9, 5, 0);
 
         public Plugin()
         {
@@ -29,6 +30,14 @@ namespace LobbyMusicPlugin
         public override void OnEnabled()
         {
             Instance = this;
+            Log.Warn($"{Name} is no more services after 9.5.0");
+            if (Exiled.Loader.Loader.Version != RequiredExiledVersion)
+            {
+                Log.Error($"[LobbyMusicPlugin] EXILED Version is not {RequiredExiledVersion}! Current Version: {Exiled.Loader.Loader.Version}");
+                Log.Error("[LobbyMusicPlugin] Disable Plugin.");
+                OnDisabled();
+                return;
+            }
             Exiled.Events.Handlers.Server.WaitingForPlayers += OnWaitingForPlayers;
             Exiled.Events.Handlers.Server.RoundStarted += OnRoundStarted;
             Exiled.Events.Handlers.Server.RoundEnded += OnRoundEnded;
