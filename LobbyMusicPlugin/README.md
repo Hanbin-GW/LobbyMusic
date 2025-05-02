@@ -1,3 +1,4 @@
+![GitHub Releases](https://img.shields.io/github/downloads/Hanbin-GW/LobbyMusic/LobbyMusic.dll)
 # LobbyMusic (Free Version)
 The lobby music plugin
 
@@ -17,6 +18,5 @@ The lobby music plugin
 ## Tech Support
 ### <a href = "https://discord.gg/aYyNucAfqE">Made by Ghost Server</a>
 
-# Premium Version (Audio Plugin)
-- DM to **hanbin0939**
-- the cost is 5000₩ (KRW) / 5 dollar in US
+# The Plugin Will became a rework!
+(You should pay a 1 Dollar)

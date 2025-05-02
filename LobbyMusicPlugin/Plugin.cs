@@ -30,7 +30,7 @@ namespace LobbyMusicPlugin
         public override void OnEnabled()
         {
             Instance = this;
-            Log.Warn($"{Name} is no more services after 9.5.0");
+            Log.Warn($"{Name} is no more services after 9.5.0 (SL version 14.0.3)");
             if (Exiled.Loader.Loader.Version != RequiredExiledVersion)
             {
                 Log.Error($"[LobbyMusicPlugin] EXILED Version is not {RequiredExiledVersion}! Current Version: {Exiled.Loader.Loader.Version}");
