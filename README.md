@@ -1,6 +1,6 @@
 # LobbyMusic Plugin for SCP: Secret Laboratory
 
->[!INFO]
+>[!WARNING]
 > ⚠️ **Note:** This plugin has been **merged into [GhostPlugin](https://github.com/Hanbin-GW/GhostPlugin)** and is no longer maintained as a standalone project.
 > All LobbyMusic features are now included and actively developed within **GhostPlugin**.
 
