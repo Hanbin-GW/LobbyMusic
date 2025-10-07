@@ -1,49 +1,52 @@
-![GitHub Releases](https://img.shields.io/github/downloads/Hanbin-GW/LobbyMusic/LobbyMusic.dll)
+# LobbyMusic Plugin for SCP: Secret Laboratory
 
-#LobbyMusic (Free Version)
-
-A **lobby background music plugin** for **SCP: Secret Laboratory**, allowing you to play custom songs while players wait in the lobby.
-
-> [!WARNING]
-> ⚠️ **Note:** This plugin requires **CedMod’s [SCPSLAudioApi](https://github.com/CedModV2/SCPSLAudioApi/releases/tag/0.0.8)** to function properly.
+>[!INFO]
+> ⚠️ **Note:** This plugin has been **merged into [GhostPlugin](https://github.com/Hanbin-GW/GhostPlugin)** and is no longer maintained as a standalone project.
+> All LobbyMusic features are now included and actively developed within **GhostPlugin**.
 
 ---
 
-## Installation
+## Overview
 
-1. Download and install **[SCPSLAudioApi](https://github.com/CedModV2/SCPSLAudioApi/releases/tag/0.0.8)**.
-2. Place your **`.ogg`** audio files inside the following directory:
+The **LobbyMusic Plugin** was designed to enhance the **SCP: Secret Laboratory** lobby experience by playing background music before rounds start.
+It allowed server administrators to control, customize, and play music tracks dynamically for all connected players.
 
-   ```
-   C:\Users\<YourUserName>\AppData\Roaming\EXILED\Plugins\audio
-   ```
-3. Configure the plugin settings in your **config file**:
-
-    * Enable `LoopSingleSong` to play a single song infinitely.
-    * Set the song name in `SingleSongName`.
-    * If you disable `LoopSingleSong`, you can create a song queue using `QueueSongs`.
+Now, all of its functionality has been integrated into **GhostPlugin**, providing improved stability, extended features, and centralized control across Ghost World server plugins.
 
 ---
 
-## Audio Requirements
+## Key Features (Legacy)
 
-* The music file **must be mono**.
-* The audio **must be 48,000 Hz**.
-* You can easily convert your `.mp3` files to `.ogg` (mono + 48,000 Hz) using this tool:
-   [**Music .ogg Mono Converter (requires ffmpeg)**](https://github.com/Hanbin-GW/Music-.ogg-mono-Converter/releases)
-
----
-
-## Tech Support
- 
-**Made by [Ghost Server](https://discord.gg/aYyNucAfqE)**
+* **Lobby Background Music** – Plays music tracks while players wait in the lobby.
+* **Music Controls** – Start, stop, and change songs with in-game commands.
+* **Volume Management** – Adjust playback volume dynamically via `/setvolume`.
+* **Song Lists** – Supports multiple tracks and random playback.
+* **Custom Configuration** – Configure song paths and playback settings in `Config.cs`.
 
 ---
 
-## Future Notice
+## Technical Details
 
-This plugin will receive a **major rework** in the future.
-
-> The reworked version will be **paid ($1)**.
+| Category        | Details                                                 |
+| --------------- | ------------------------------------------------------- |
+| **Language**    | C#                                                      |
+| **Framework**   | Exiled API                                              |
+| **Game**        | SCP: Secret Laboratory                                  |
+| **Merged Into** | [GhostPlugin](https://github.com/Hanbin-GW/GhostPlugin) |
 
 ---
+
+## Installation (Legacy)
+
+1. Build the project using **Visual Studio**.
+2. Copy the generated `LobbyMusic.dll` to the **Exiled/Plugins** directory.
+3. Edit configuration options in your server’s config file.
+4. Restart the SCP:SL server.
+
+---
+
+## Project Status
+
+* **Merged into:** [GhostPlugin](https://github.com/Hanbin-GW/GhostPlugin)
+* **Maintenance:** Discontinued as standalone
+* **Last Active Version:** Before GhostPlugin integration
