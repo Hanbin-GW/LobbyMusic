@@ -1,22 +1,49 @@
 ![GitHub Releases](https://img.shields.io/github/downloads/Hanbin-GW/LobbyMusic/LobbyMusic.dll)
-# LobbyMusic (Free Version)
-The lobby music plugin
 
-**MUST** required CedMod's ****SCPSLAudioApi**** Plugin 
+#LobbyMusic (Free Version)
 
-<a href="https://github.com/CedModV2/SCPSLAudioApi/releases/tag/0.0.8">Download **SCPSLAudioApi**</a>
+A **lobby background music plugin** for **SCP: Secret Laboratory**, allowing you to play custom songs while players wait in the lobby.
 
-- The directory path is created in `C:\Users\UserName\AppData\Roaming\EXILED\Plugins\audio`
+> [!WARNING]
+> ⚠️ **Note:** This plugin requires **CedMod’s [SCPSLAudioApi](https://github.com/CedModV2/SCPSLAudioApi/releases/tag/0.0.8)** to function properly.
 
-- you can place it in a audio file (.ogg)
+---
 
-- in config, you can enable the LoopSingleSong.
-- if you enable LoopSingleSong, the one of sone is infinitelly played you can set in `SingleSongName`
-- if you not enable the `SingleSongName`, you have to set queue the song lists. (`QueueSongs`)
-- <span style = "color:red"> the music file must be mono and audio must be 48000 Hz</span>
-- You can convert the .mp3 file to .ogg + mono + 480000Hz <a href="https://github.com/Hanbin-GW/Music-.ogg-mono-Converter/releases">Download( + need ffmp)</a>
+## Installation
+
+1. Download and install **[SCPSLAudioApi](https://github.com/CedModV2/SCPSLAudioApi/releases/tag/0.0.8)**.
+2. Place your **`.ogg`** audio files inside the following directory:
+
+   ```
+   C:\Users\<YourUserName>\AppData\Roaming\EXILED\Plugins\audio
+   ```
+3. Configure the plugin settings in your **config file**:
+
+    * Enable `LoopSingleSong` to play a single song infinitely.
+    * Set the song name in `SingleSongName`.
+    * If you disable `LoopSingleSong`, you can create a song queue using `QueueSongs`.
+
+---
+
+## Audio Requirements
+
+* The music file **must be mono**.
+* The audio **must be 48,000 Hz**.
+* You can easily convert your `.mp3` files to `.ogg` (mono + 48,000 Hz) using this tool:
+   [**Music .ogg Mono Converter (requires ffmpeg)**](https://github.com/Hanbin-GW/Music-.ogg-mono-Converter/releases)
+
+---
+
 ## Tech Support
-### <a href = "https://discord.gg/aYyNucAfqE">Made by Ghost Server</a>
+ 
+**Made by [Ghost Server](https://discord.gg/aYyNucAfqE)**
 
-# The Plugin Will became a rework!
-(You should pay a 1 Dollar)
+---
+
+## Future Notice
+
+This plugin will receive a **major rework** in the future.
+
+> The reworked version will be **paid ($1)**.
+
+---
